@@ -365,6 +365,7 @@
 "Assets/Scripts/Interaction.cs"
 "Assets/Scripts/ItemData.cs"
 "Assets/Scripts/ItemObject.cs"
+"Assets/Scripts/ItemSlot.cs"
 "Assets/Scripts/Player.cs"
 "Assets/Scripts/PlayerCondition.cs"
 "Assets/Scripts/PlayerController.cs"

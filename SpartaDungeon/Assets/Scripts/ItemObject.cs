@@ -7,6 +7,8 @@ using UnityEngine;
         public string GetInteractPrompt();
         public void OnInteract();
     }
+
+// 프롬프트에 아이템 정보 출력, 아이템 획득
 public class ItemObject : MonoBehaviour, IInteractable
 {
     public ItemData data;

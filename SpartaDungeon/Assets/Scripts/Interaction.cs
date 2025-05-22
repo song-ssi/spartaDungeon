@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// 플레이어가 게임오브젝트에 상호작용.
 public class Interaction : MonoBehaviour
 {
     public float checkRate = 0.05f;

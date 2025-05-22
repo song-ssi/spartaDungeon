@@ -370,6 +370,7 @@
 "Assets/Scripts/PlayerCondition.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/UICondition.cs"
+"Assets/Scripts/UIInventory.cs"
 -langversion:9.0
 
 /deterministic

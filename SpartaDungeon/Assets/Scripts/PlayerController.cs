@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector]
     public bool canLook = true;
+
+    public Action inventory;
     
     private Rigidbody _rigidbody;
     
@@ -77,7 +80,6 @@ public class PlayerController : MonoBehaviour
     private void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
-        Debug.Log($"mouseDelta.y : {mouseDelta.y}");
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
         cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
 
@@ -112,8 +114,18 @@ public class PlayerController : MonoBehaviour
         return false;     
     }
 
-    public void ToggleCursor(bool toggle)
+
+    public void OnInventoryButton(InputAction.CallbackContext context)
     {
+        if(context.phase == InputActionPhase.Started)
+        {
+            inventory?.Invoke();
+            ToggleCursor();
+        }
+    }
+    void ToggleCursor()
+    {
+        bool toggle = Cursor.lockState == CursorLockMode.Locked;
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
     }

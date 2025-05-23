@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Scripting.APIUpdating;
@@ -17,8 +18,24 @@ public class PlayerController : MonoBehaviour
     public Transform cameraContainer;
     public float minXLook;
     public float maxXLook;
+    public float minYLook;
+    public float maxYLook;
     private float camCurXRot;
+    private float camCurYRot;
     public float lookSensitivity;
+
+    // 점프게이지
+    [Header("JumpGauge")]
+    public float usejumpgauge;
+    private bool possiblejump;
+
+    // 벽타기
+    [Header("Climb")]
+    public float wallCheckDistance = 0.5f;
+    public float climbForce;
+    public LayerMask wallLayerMask;
+
+    
 
     private Vector2 mouseDelta;
 
@@ -28,10 +45,12 @@ public class PlayerController : MonoBehaviour
     public Action inventory;
     
     private Rigidbody _rigidbody;
-    
+    private PlayerCondition condition; 
+    private Condition _condition;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        condition = GetComponent<PlayerCondition>();
     }
 
     void Start()
@@ -71,7 +90,9 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
+        Vector3 camForward = cameraContainer.forward;
+        Vector3 camRight = cameraContainer.right;
+        Vector3 dir = camForward * curMovementInput.y + camRight * curMovementInput.x;
         dir *= moveSpeed;
         dir.y = _rigidbody.velocity.y;
         _rigidbody.velocity = dir;
@@ -80,20 +101,28 @@ public class PlayerController : MonoBehaviour
     private void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
+        camCurYRot += mouseDelta.x * lookSensitivity;
+        // Debug.Log($"마우스델타값 : {mouseDelta}");
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
-        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
-
-        transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
+        camCurYRot = Mathf.Clamp(camCurYRot, minYLook, maxYLook);
+        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, camCurYRot, 0);
     }
 
+    // 땅일때는 Jump, 벽일때는 Climb
     public void OnJumpInput(InputAction.CallbackContext context)
     {
-        if(context.phase == InputActionPhase.Started && IsGrounded())
+        if(context.phase == InputActionPhase.Started && IsGrounded() && condition.possiblejump(usejumpgauge))
         {
             _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+            condition.MinusJumpGauge(usejumpgauge);
+        }
+        else if(context.phase == InputActionPhase.Started && IsWall())
+        {
+            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.AddForce(Vector3.up * climbForce, ForceMode.Impulse);
         }
     }
-
+    
     private bool IsGrounded()
     {
         Ray[] rays = new Ray[4]
@@ -114,6 +143,17 @@ public class PlayerController : MonoBehaviour
         return false;     
     }
 
+
+    // wall인지 체크
+    private bool IsWall()
+    {
+        Ray ray = new Ray(transform.position + (transform.forward * 0.5f) + (transform.up * 0.05f), Vector3.forward);
+        if(Physics.Raycast(ray, wallCheckDistance, wallLayerMask))
+        {
+            return true;
+        }
+        return false;
+    }
 
     public void OnInventoryButton(InputAction.CallbackContext context)
     {

@@ -10,14 +10,20 @@ public class PlayerCondition : MonoBehaviour
     Condition health { get { return uiCondition.health;}}
     Condition hunger { get {return uiCondition.hunger;}}
     Condition stamina { get {return uiCondition.stamina;}}
+    Condition jumpgauge { get {return uiCondition.jumpgauge;}}
 
     public float noHungerHealthDecay;
     public event Action onTakeDamage;
+
+    void Start()
+    {
+    }
 
     private void Update()
     {
         hunger.Subtract(hunger.passiveValue * Time.deltaTime);
         stamina.Add(stamina.passiveValue * Time.deltaTime);
+        jumpgauge.Add(jumpgauge.passiveValue * Time.deltaTime);
 
         if(hunger.curValue <= 0f)
         {
@@ -39,6 +45,22 @@ public class PlayerCondition : MonoBehaviour
     {
         hunger.Add(amount);
     }
+
+    public void MinusJumpGauge(float amount)
+    {
+        jumpgauge.Subtract(amount);
+    }
+    
+    public bool possiblejump(float amount)
+    {
+        if(jumpgauge.PossibleJump(amount))
+            return true;
+        else
+            return false;
+    }
+
+
+    
 
     public void Die()
     {

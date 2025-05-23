@@ -29,6 +29,10 @@ public class Condition : MonoBehaviour
     {
         curValue = Mathf.Max(curValue - amount, 0.0f);
     }
+    public bool PossibleJump(float amount) 
+    {
+        return amount <= curValue;
+    }  
 
     public float GetPercentage()
     {

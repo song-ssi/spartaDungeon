@@ -1,4 +1,6 @@
+using System.Security.Principal;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MovingFloor : MonoBehaviour
 {
@@ -62,7 +64,6 @@ public class MovingFloor : MonoBehaviour
     {   
         // targetMovepos로 가라.
         transform.position = Vector3.MoveTowards(transform.position, targetMovePos.position, moveSpeed * Time.deltaTime);
-        PlayerPos();
 
         if (transform.position == targetMovePos.position)
         {
@@ -71,12 +72,13 @@ public class MovingFloor : MonoBehaviour
         }
     }
 
-    void PlayerPos()
-    {
-        void OnCollisionEnter(Collision collision)
+        void OnCollisionStay(Collision other)       
         {
-            collision.transform.position += transform.position;
+            Vector3 newPos = other.transform.position;
+            newPos.x = transform.position.x;
+            newPos.z = transform.position.z;
+            other.transform.position = newPos;
+
         }
-    }
 
 }

@@ -367,6 +367,7 @@
 "Assets/Scripts/ItemObject.cs"
 "Assets/Scripts/ItemSlot.cs"
 "Assets/Scripts/JumpingFloor.cs"
+"Assets/Scripts/MovingFloor.cs"
 "Assets/Scripts/NewBehaviourScript.cs"
 "Assets/Scripts/Player.cs"
 "Assets/Scripts/PlayerCondition.cs"

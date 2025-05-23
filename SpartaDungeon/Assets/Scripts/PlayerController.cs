@@ -80,6 +80,11 @@ public class PlayerController : MonoBehaviour
     {
         if(context.phase == InputActionPhase.Performed)
         {
+            transform.eulerAngles = new Vector3(0, cameraContainer.eulerAngles.y, 0); // 플레이어의 얼굴이 카메라가 보고있는 방향으로 바뀜
+            camCurXRot = 0;
+            camCurYRot = 0;
+
+            Debug.Log($"카메라컨테이너y값 : {cameraContainer.rotation.y}");
             curMovementInput = context.ReadValue<Vector2>();
         }
         else if(context.phase == InputActionPhase.Canceled)
@@ -96,17 +101,30 @@ public class PlayerController : MonoBehaviour
         dir *= moveSpeed;
         dir.y = _rigidbody.velocity.y;
         _rigidbody.velocity = dir;
-    }
 
+    }
+    // ========================
+    // 1인칭 시점
+    //     void CameraLook()
+    // {
+    //     camCurXRot += mouseDelta.y * lookSensitivity;
+    //     camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
+    //     cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
+
+    //     transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
+    // }
+    // =========================
+
+    // 3인칭 시점        
     private void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
         camCurYRot += mouseDelta.x * lookSensitivity;
-        // Debug.Log($"마우스델타값 : {mouseDelta}");
         camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
         camCurYRot = Mathf.Clamp(camCurYRot, minYLook, maxYLook);
         cameraContainer.localEulerAngles = new Vector3(-camCurXRot, camCurYRot, 0);
     }
+    
 
     // 땅일때는 Jump, 벽일때는 Climb
     public void OnJumpInput(InputAction.CallbackContext context)
@@ -144,7 +162,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    // wall인지 체크
+    // 벽인지 체크
     private bool IsWall()
     {
         Ray ray = new Ray(transform.position + (transform.forward * 0.5f) + (transform.up * 0.05f), Vector3.forward);

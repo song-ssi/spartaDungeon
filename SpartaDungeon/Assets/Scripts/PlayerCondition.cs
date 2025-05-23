@@ -46,11 +46,13 @@ public class PlayerCondition : MonoBehaviour
         hunger.Add(amount);
     }
 
+    // 점프게이지 감소
     public void MinusJumpGauge(float amount)
     {
         jumpgauge.Subtract(amount);
     }
-    
+
+    // 점프가 가능한지 (점프게이지 0일시 점프 못함)
     public bool possiblejump(float amount)
     {
         if(jumpgauge.PossibleJump(amount))
@@ -59,8 +61,6 @@ public class PlayerCondition : MonoBehaviour
             return false;
     }
 
-
-    
 
     public void Die()
     {

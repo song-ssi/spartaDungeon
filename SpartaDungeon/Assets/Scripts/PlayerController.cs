@@ -84,7 +84,6 @@ public class PlayerController : MonoBehaviour
             camCurXRot = 0;
             camCurYRot = 0;
 
-            Debug.Log($"카메라컨테이너y값 : {cameraContainer.rotation.y}");
             curMovementInput = context.ReadValue<Vector2>();
         }
         else if(context.phase == InputActionPhase.Canceled)
